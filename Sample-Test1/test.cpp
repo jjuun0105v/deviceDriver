@@ -21,8 +21,4 @@ TEST(TestCaseName, TestName) {
 	EXPECT_CALL(mk, read).Times(5);
 
 	dd.read(0xA);
-	dd.read(0xA);
-	dd.read(0xA);
-	dd.read(0xA);
-	dd.read(0xA);
 }

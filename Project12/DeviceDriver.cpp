@@ -23,13 +23,13 @@ int DeviceDriver::CheckSameValue(long address)
 
 int DeviceDriver::read(long address)
 {
-#if 0
+#if 1
     // TODO: implement this method properly
-    int value;
+    int value = 0xFF;
     try
     {
         value = CheckSameValue(address);
-        return (int)(m_hardware->read(address));
+        return value;
     }
     catch (out_of_range& e)
     {
@@ -37,8 +37,9 @@ int DeviceDriver::read(long address)
     }
 
     return value;
-#endif
+#else
     return (int)(m_hardware->read(address));
+#endif
 }
 
 bool DeviceDriver::CheckAbleToWrite(long address)
