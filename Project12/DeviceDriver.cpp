@@ -3,6 +3,7 @@
 #include <stdexcept>
 using namespace std;
 
+
 DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
 {}
 
@@ -22,6 +23,7 @@ int DeviceDriver::CheckSameValue(long address)
 
 int DeviceDriver::read(long address)
 {
+#if 0
     // TODO: implement this method properly
     int value;
     try
@@ -35,6 +37,8 @@ int DeviceDriver::read(long address)
     }
 
     return value;
+#endif
+    return (int)(m_hardware->read(address));
 }
 
 bool DeviceDriver::CheckAbleToWrite(long address)
