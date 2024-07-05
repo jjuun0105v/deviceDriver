@@ -9,40 +9,24 @@ DeviceDriver::DeviceDriver(FlashMemoryDevice* hardware) : m_hardware(hardware)
 
 int DeviceDriver::CheckSameValue(long address)
 {
-    int value = (int)(m_hardware->read(address));
+    int first_Value = (int)(m_hardware->read(address));
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < READ_RETRY_CNT; i++)
     {
-        if (value == (int)(m_hardware->read(address))) continue;
-
-        throw out_of_range("value is different!!");
+        int read_value = (int)(m_hardware->read(address));
+        if (first_Value != read_value) throw ReadFailException();
     }
 
-    return value;
+    return first_Value;
 }
 
 int DeviceDriver::read(long address)
 {
-#if 1
-    // TODO: implement this method properly
-    int value = 0xFF;
-    try
-    {
-        value = CheckSameValue(address);
-        return value;
-    }
-    catch (out_of_range& e)
-    {
-        cout << e.what() << endl;//<< " not same value\n";
-    }
-
+    int value = CheckSameValue(address);
     return value;
-#else
-    return (int)(m_hardware->read(address));
-#endif
 }
 
-bool DeviceDriver::CheckAbleToWrite(long address)
+bool DeviceDriver::IsAbleToWrite(long address)
 {
     if (0xFF == (int)(m_hardware->read(address)))
     {
@@ -54,19 +38,14 @@ bool DeviceDriver::CheckAbleToWrite(long address)
 
 void DeviceDriver::write(long address, int data)
 {
-    // TODO: implement this method
-    try
+    if (true == IsAbleToWrite(address))
     {
-        if (true == CheckAbleToWrite(address))
-        {
-            m_hardware->write(address, (unsigned char)data);
-            return;
-        }
+        m_hardware->write(address, (unsigned char)data);
+        return;
+    }
+    else
+    {
+        throw WriteFailException();
+    }
 
-        throw invalid_argument("its value has already been written");
-    }
-    catch (invalid_argument& e)
-    {
-        cout << e.what() << endl;//<< " not same value\n";
-    }
 }
